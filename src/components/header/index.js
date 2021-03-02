@@ -27,11 +27,7 @@ export default function header() {
     <AppBar position="static" className={classes.root} >
         <Toolbar className={classes.toolbar} >
         <Link to="/">
-        <img 
-        src="./0.png"
-        alt="sla"
-        className="logo"
-        />
+        <span style={{ color: "white" }}> React MovieDB Clone</span>
         </Link>
           
         </Toolbar>

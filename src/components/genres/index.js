@@ -1,13 +1,9 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
-import FormLabel from '@material-ui/core/FormLabel';
-import FormControl from '@material-ui/core/FormControl';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -43,6 +39,7 @@ export default function Genres({genres}){
     let object = {}
     genres.map( genre =>{
       object[genre.id] = false
+      return true
     })
     return object
   } 
@@ -67,8 +64,8 @@ export default function Genres({genres}){
           {
             genresHalf.map((genre,i) =>{
               return(
-                <FormControlLabel
-                control={<Checkbox checked={genreid[genre.id]} onChange={handleChange} name={genre.id} />}
+                <FormControlLabel key={i}
+                control={<Checkbox  color="primary" checked={genreid[genre.id]} onChange={handleChange} name={genre.id.toString()} />}
                 label={genre.name}
                 />
               )
@@ -79,8 +76,8 @@ export default function Genres({genres}){
           { 
             genresSecond.map((genre,i) =>{
               return(
-                <FormControlLabel
-                control={<Checkbox checked={genreid[genre.id]} onChange={handleChange} name={genre.id} />}
+                <FormControlLabel key={i}
+                control={<Checkbox color="primary" checked={genreid[genre.id]} onChange={handleChange} name={genre.id.toString()} />}
                 label={genre.name}
                 />
               )
@@ -88,7 +85,6 @@ export default function Genres({genres}){
           }
         </FormGroup>
         </div>
-        <Button size="small">Learn More</Button>
       </CardContent>
       
     </Card>

@@ -1,61 +1,90 @@
-import React, { useState, useEffect  } from 'react';
-import { Link, useHistory } from 'react-router-dom';
-import Header from '../../components/header'
-import Carrousel from '../../components/carrousel'
-import Genres from '../../components/genres'
-import MoviesRow from '../../components/movies-row'
+import React, { useState, useEffect } from "react";
+import Header from "../../components/header";
+import Carrousel from "../../components/carrousel";
+import Genres from "../../components/genres";
+import MoviesRow from "../../components/movies-row";
+import Button from "@material-ui/core/Button";
+import CachedIcon from "@material-ui/icons/Cached";
+import { makeStyles } from '@material-ui/core';
 
-import Grid from '@material-ui/core/Grid';
+import Grid from "@material-ui/core/Grid";
 
-
+const useStyles = makeStyles({
+  root: {
+    width: "100%",
+  }
+});
 
 export default function home() {
-  const [movies,setMovies] = useState([]);
-  const [carrousel,setCarrousel] = useState([])
-  const [genres,setGenres] = useState([])
+  const [movies, setMovies] = useState([]);
+  const [carrousel, setCarrousel] = useState([]);
+  const [genres, setGenres] = useState([]);
+  const [page,setPages] = useState(1)
 
-  useEffect(() =>{
-      async function getMovies(){
-      let endpoint = "https://api.themoviedb.org/3/movie/popular?api_key=ad7ed7b68068e0a84855751bb171647a&page=1"
+  const classes = useStyles();
+
+  useEffect(() => {
+    async function getMovies() {
+      let endpoint =
+        "https://api.themoviedb.org/3/movie/popular?api_key=ad7ed7b68068e0a84855751bb171647a&page=1";
       let promiseResponse = await fetch(endpoint);
       let jsonResponse = await promiseResponse.json();
-      let moviearray = [...jsonResponse.results]
-      setMovies(moviearray)
-      setCarrousel(moviearray.splice(0,6))
-      }
-    getMovies();
-  },[])
-
-  useEffect(() =>{
-    async function getGenres(){
-      let endpoint = "https://api.themoviedb.org/3/genre/movie/list?api_key=ad7ed7b68068e0a84855751bb171647a"
-      let promiseRes = await fetch(endpoint)
-      let json = await promiseRes.json();
-      let genreArray = json.genres
-      setGenres(genreArray)
+      let moviearray = [...jsonResponse.results];
+      setMovies(moviearray);
+      setCarrousel(moviearray.splice(0, 6));
     }
-    getGenres()
-  },[])
+    getMovies();
+  }, []);
+
+  useEffect(() => {
+    async function getGenres() {
+      let endpoint =
+        "https://api.themoviedb.org/3/genre/movie/list?api_key=ad7ed7b68068e0a84855751bb171647a";
+      let promiseRes = await fetch(endpoint);
+      let json = await promiseRes.json();
+      let genreArray = json.genres;
+      setGenres(genreArray);
+    }
+    getGenres();
+  }, []);
+
+  useEffect(() => {
+    async function getMoreMovies() {
+      let endpoint =
+      `https://api.themoviedb.org/3/movie/popular?api_key=ad7ed7b68068e0a84855751bb171647a&page=${page}`;
+      let promiseResponse = await fetch(endpoint);
+      let jsonResponse = await promiseResponse.json();
+      let moviearray = [...movies, ...jsonResponse.results];
+      setMovies(moviearray);
+    }
+    getMoreMovies();
+  }, [page]);
+
+  const changePage = () => {
+    setPages(page + 1)
+  };
 
   return (
     <div className="container">
-    <Header/>
-      { carrousel!=0 ? 
-      <Carrousel movies={carrousel}/>
-      : undefined}
-      <Grid container spacing={1}>
-      <Grid item xs={3}>
-      { genres !=0 ?
-      <Genres genres={genres}></Genres>
-      : undefined}
-      </Grid>
-      <Grid item xs={9}>
-      { movies!=0 ?
-      <MoviesRow movies={movies}></MoviesRow>
-      : undefined}
-      </Grid>
+      <Header />
+      { movies?
+      <Carrousel   movies={carrousel} />
+      :
+      "loading movies"
+      }
+      <Grid container spacing={1} style={{ marginTop: "3vh"}}>
+        <Grid item xs={3}>
+          <Genres genres={genres}></Genres>
+        </Grid>
+        <Grid item xs={9}>
+          <MoviesRow movies={movies}></MoviesRow>
+          <div style={{ marginTop: "5vh", paddingLeft: "20%", paddingRight: "20%" }}>
+          <Button color="primary" variant="contained" onClick={changePage} className={classes.root}>
+            <CachedIcon></CachedIcon> Load More Movies
+          </Button>
+          </div>
+        </Grid>
       </Grid>
     </div>
-  )
+  );
 }
-

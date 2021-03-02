@@ -10,7 +10,7 @@ export default function Carrousel({ movies }){
    return(
     <div>
       
-          <Carousel>
+          <Carousel showThumbs={false}>
           {movies.map((movie,i) =>{
           return(
             <div
@@ -27,7 +27,7 @@ export default function Carrousel({ movies }){
             <div className="rmdb-heroimage-text">
                <h1>{movie.original_title}</h1>
                <p>{movie.overview}</p>
-            </div>
+            </div> 
          </div> 
          </div>  
           )
