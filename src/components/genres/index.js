@@ -5,6 +5,7 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import FormGroup from '@material-ui/core/FormGroup';
+import Button from "@material-ui/core/Button";
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 
@@ -21,10 +22,10 @@ const useStyles = makeStyles({
 });
 
 
-export default function Genres({genres}){
+export default function Genres({genres, genreFilter}){
   const classes = useStyles();
-  const ob = transformArrayObject()
-  const [genreid, setGenreId] = React.useState(ob);
+  const [genreid, setGenreId] = React.useState(transformArrayObject());
+
   let genresHalf = genres.filter(function(genre,i){
     return i<=genres.length/2
   })
@@ -52,7 +53,6 @@ export default function Genres({genres}){
     console.log(genreid)
   }
   return (
-   
     <Card className={classes.root} variant="outlined">
       <CardContent >
         <Typography className={classes.title} color="textSecondary" gutterBottom>
@@ -84,6 +84,20 @@ export default function Genres({genres}){
             })
           }
         </FormGroup>
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'center',marginTop: '2vh'}}>
+          <Button color="secondary" variant="contained" 
+          onClick={ 
+            ()=>{
+              let selectedGenres = []
+              for (var prop in genreid) {
+                if(genreid[prop] == true) selectedGenres.push(prop)
+              }
+              genreFilter(selectedGenres)
+            }
+            }>
+              filtrar
+          </Button>
         </div>
       </CardContent>
       

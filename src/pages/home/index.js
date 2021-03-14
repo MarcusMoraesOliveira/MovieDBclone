@@ -16,10 +16,11 @@ const useStyles = makeStyles({
 });
 
 export default function home() {
-  const [movies, setMovies] = useState([]);
-  const [carrousel, setCarrousel] = useState([]);
-  const [genres, setGenres] = useState([]);
+  const [movies, setMovies] = useState([])
+  const [carrousel, setCarrousel] = useState([])
+  const [genres, setGenres] = useState([])
   const [page,setPages] = useState(1)
+  const [urlMoreMovies,seturlMoreMovies] = useState("https://api.themoviedb.org/3/movie/popular?api_key=ad7ed7b68068e0a84855751bb171647a&page=")
 
   const classes = useStyles();
 
@@ -51,7 +52,7 @@ export default function home() {
   useEffect(() => {
     async function getMoreMovies() {
       let endpoint =
-      `https://api.themoviedb.org/3/movie/popular?api_key=ad7ed7b68068e0a84855751bb171647a&page=${page}`;
+      urlMoreMovies + page;
       let promiseResponse = await fetch(endpoint);
       let jsonResponse = await promiseResponse.json();
       let moviearray = [...movies, ...jsonResponse.results];
@@ -59,6 +60,30 @@ export default function home() {
     }
     getMoreMovies();
   }, [page]);
+
+  const getByGenre =  async (genres) => {
+      if(genres.toString == [].toString()){
+        setPages(1)
+        seturlMoreMovies("https://api.themoviedb.org/3/movie/popular?api_key=ad7ed7b68068e0a84855751bb171647a&page=")
+        return;
+      }
+      let endpoint =
+      `https://api.themoviedb.org/3/discover/movie?api_key=ad7ed7b68068e0a84855751bb171647a&with_genres=`;
+      genres.map((genre,key) =>{
+        if(key ==0){
+          endpoint+= genre
+        }else{
+          endpoint += ','
+          endpoint += genre
+        }
+      })
+      let promiseResponse = await fetch(endpoint)
+      let jsonResponse = await promiseResponse.json()
+      let moviearray = [...jsonResponse.results]
+      setMovies(moviearray)
+      seturlMoreMovies(endpoint+"&page=")
+      setPages(1)
+  };
 
   const changePage = () => {
     setPages(page + 1)
@@ -74,7 +99,7 @@ export default function home() {
       }
       <Grid container spacing={1} style={{ marginTop: "3vh"}}>
         <Grid item xs={3}>
-          <Genres genres={genres}></Genres>
+          { genres.toString()!= [].toString() ? (<Genres genres={genres} genreFilter={getByGenre}></Genres>) : null}
         </Grid>
         <Grid item xs={9}>
           <MoviesRow movies={movies}></MoviesRow>
