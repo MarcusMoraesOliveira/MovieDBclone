@@ -26,7 +26,7 @@ export default function movie() {
 
   useEffect(() => {
     async function getMovie() {
-      let endpoint = `http://api.themoviedb.org/3/movie/${id}?api_key=ad7ed7b68068e0a84855751bb171647a`;
+      let endpoint = `https://api.themoviedb.org/3/movie/${id}?api_key=ad7ed7b68068e0a84855751bb171647a`;
       let promiseResponse = await fetch(endpoint);
       let jsonResponse = await promiseResponse.json();
       console.log(jsonResponse);
